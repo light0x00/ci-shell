@@ -1,7 +1,12 @@
 function deploy(){
     echo "[INFO] Start deploy"
-    if  [ ! -r "$repo_path/$compile_target_path" ] || [ -z $remote_ip ] || [ -z $remote_user ] || [ -z $remote_path ] ;then
-        echo "[ERROR] make sure the compile target \"$repo_path/$compile_target_path\" exists,and remote_ip,remote_user,remote_path is required"
+
+    if  [ ! -r "$repo_path/$compile_target_path" ] ;then
+        echo "[ERROR] make sure the compile target \"$repo_path/$compile_target_path\" exists"
+        return 1
+    fi
+    if  [ -z $remote_ip ] || [ -z $remote_user ] || [ -z $remote_path ] ;then
+        echo "[ERROR] remote_ip,remote_user,remote_path is required"
         return 1;
     fi
 

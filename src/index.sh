@@ -1,5 +1,5 @@
 
-#!/usr/local/bin/bash
+#!/bin/bash
 
 function help_info(){
     echo "-m,--mode    部署到本地或远程主机"
@@ -115,6 +115,8 @@ do
     shift
 done
 
+
+
 # ============================================================ 
 if [ -z $app_name ] ; then
     if [ -z $git_url ] ; then
@@ -124,15 +126,17 @@ if [ -z $app_name ] ; then
     app_name=$(sed -n '1s/.*\/\([^\/\.]*\)\(.git\)*$/\1/1p' <<< $git_url)  # (sed这让人吐血的水货正则)
 fi
 
-base_path=`dirname $0`
-
+# 得到运行时根路径
+base_path=`dirname $(readlink "$0")`
+if [ -z $base_path ] ;then
+    base_path=`dirname $0`
+fi
 
 set -o errexit
 
 # ============================================================
 
 source  "$base_path/common/strategies.sh"
-
 # 1. pull
 if ! $skip_pull ; then
     source "$base_path/common/pull.sh"
