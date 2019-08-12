@@ -4,22 +4,20 @@
 
 ---
 
-# 环境要求:
+# 环境要求
 
 1. bash版本>`3.2.57`
 2. 有gnu版本的getopts(cent-os自带)
 
 ---
 
-# 安装:
+# 安装
 
 ```bash
 git clone [path]
-chmod u+x [path]/deploy/src/index.sh
-# 如果经常使用建议使用别名
-alias ci-shell=[path]/deploy/src/index.sh
-# 或者使用软连接
-ln -s
+chmod u+x [path]/src/index.sh
+# 如果经常使用
+ln -s [path]/src/index.sh /usr/local/bin/ci-shell
 ```
 
 ---
@@ -87,7 +85,7 @@ ln -s
 
 ## 备份部署文件
 
-如果你有备份每一次部署(的项目)的需求,就像下面这样.
+如果你需要备份每一次部署(的项目),就像下面这样:
 
 ```txt
 app-backup/
