@@ -1,31 +1,21 @@
 
 #!/usr/local/bin/bash
 
-# set -o errexit -o pipefail -o nounset
-
-# 1 serverA pull te scp to serverB
-# 2 serverA pull and cp to deploy path.
-
-# mode
-# f1: 部署前端(编译基于npm)到远程
-# f2: 部署前端(编译基于npm)到本地
-
-
-
-function helpInfo(){
-    echo "-m,--mode    local or remote"
-    echo "--compile-strategy    bu"
+function help_info(){
+    echo "-m,--mode    部署到本地或远程主机"
+    echo "--compile-strategy   编译策略,可以指定自定义编译脚本的路径,该脚本需要定义一个名为\"compile\"的function"
     echo "--git-url    代码仓库url(required)"
     echo "--git-branch   分支(默认: master)"
     echo "--local-path,--repo_path   代码仓库保存在哪里(默认: 生成一个临时目录在/tmp)"
     echo "--compile-target-path   编译结果的路径(相对于代码仓库)"
-    echo "--remote-user   用来登录远程主机的用户名"
-    echo "--remote-path   用于部署的远程主机路径(remote模式使用)"
-    echo "--deploy-path     用于部署的路径(local模式使用)"
+    echo "--remote-ip   远程主机ip"
+    echo "--remote-user   远程主机的用户名"
+    echo "--remote-path   部署的远程主机路径(remote模式使用)"
+    echo "--deploy-path     部署的路径(local模式使用)"
     echo "--skip-compile    跳过编译"
     echo "--skip-pull   不更新本地代码仓库"
     echo "--skip-deploy   不部署(凑数的)"
-    echo "--backup-dir    指定后将会备份本次部署的项目到改目录,备份命令为:app_name+日期后缀(格式: yyyy-MM-DDThh:mm:ss+z)."
+    echo "--backup-dir    指定后将会备份项目到此目录,备份名为:app_name+日期后缀(格式: yyyy-MM-DDThh:mm:ss+z)."
     echo "--app-name    指定app_name(默认: 代码仓库名称)"
 }
 
@@ -64,7 +54,8 @@ skip-pull,
 skip-compile,
 skip-deploy,
 backup-dir:,
-yes' -n "集成部署工具" -- $@)
+yes,
+help' -n "集成部署工具" -- $@)
 
 while [ -n "$1" ]
 do
@@ -113,7 +104,8 @@ do
         -y|--yes)
             yes=true;;
         -h|--help)
-            helpInfo;;
+            help_info
+            exit 0;;
         --)
             ;;
         *)
@@ -122,10 +114,6 @@ do
     esac
     shift
 done
-
-# echo $git_url
-# echo $compile_strategy
-# exit
 
 # ============================================================ 
 if [ -z $app_name ] ; then
