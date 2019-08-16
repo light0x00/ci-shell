@@ -2,8 +2,8 @@ function backup(){
     echo "[INFO] Start backup"
 
     # 目标文件是否存在
-    if [ ! -r "$repo_path" ] || [ ! -r "$compile_target_path" ];then
-        echo "[ERROR] make sure the backup target(\"$repo_path/$compile_target_path/\") exits, and you have have read permission!"
+    if [ ! -r "$repo_path" ] || [ ! -r "$compile_output_path" ];then
+        echo "[ERROR] make sure the backup target(\"$repo_path/$compile_output_path/\") exits, and you have have read permission!"
         return 1
     fi
     # 字段是否缺少
@@ -34,7 +34,7 @@ function backup(){
         fi
     else
         # copy from local to remote 
-        local from="$repo_path/$compile_target_path/"
+        local from="$repo_path/$compile_output_path/"
         local to="$remote_user@$remote_ip:$backup_path"
         echo "[INFO] from: $from to: $ $to"
         if scp -r "$from/." "$to" ;then

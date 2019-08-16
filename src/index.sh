@@ -26,7 +26,8 @@ git_branch="master"
 local_path=''
 repo_path=''
 deploy_path=''
-compile_target_path=''
+compile_output_path=''
+compile_output_path=''
 compile_strategy=''
 remote_ip=''
 remote_user=''
@@ -46,6 +47,7 @@ local-path:,
 repo-path:,
 compile-strategy:,
 compile-target-path:,
+compile-output-path:,
 remote-ip:,
 remote-user:,
 remote-path:,
@@ -80,7 +82,12 @@ do
             compile_strategy="$2"
             shift;;
         --compile-target-path)
-            compile_target_path="$2"
+            echo "[WARN] compile-target-path is deprecated"
+            compile_output_path="$2"
+            compile_output_path="$2"
+            shift;;
+        --compile-output-path)
+            compile_output_path="$2"
             shift;;
         --remote-ip)
             remote_ip="$2"

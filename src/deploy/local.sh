@@ -6,12 +6,12 @@ function deploy(){
         return 1;
     fi
 
-    if  [ ! -r "$repo_path/$compile_target_path" ];then
-        echo "[ERROR] make sure the compile target \"$repo_path/$compile_target_path\" exists"
+    if  [ ! -r "$repo_path/$compile_output_path" ];then
+        echo "[ERROR] make sure the compile target \"$repo_path/$compile_output_path\" exists"
         return 1;
     fi
 
-    local from="$repo_path/$compile_target_path"
+    local from="$repo_path/$compile_output_path"
     local to=$deploy_path
     
     if [ -e $deploy_path ] ;then
@@ -27,7 +27,7 @@ function deploy(){
 
     echo "[INFO] from $from to $to"
 
-    if cp -a "$repo_path/$compile_target_path/." $deploy_path ; then
+    if cp -a "$repo_path/$compile_output_path/." $deploy_path ; then
         echo "[INFO] Deploy success"
     else 
         echo "[ERROR] Deploy failed"

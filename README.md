@@ -104,4 +104,3 @@ app-backup/
 ```
 
 `ci-shell`会在每一次部署成功后,复制部署文件到备份目录,命令为`[app_name]-yyyyMMDDhhmmss`
-
