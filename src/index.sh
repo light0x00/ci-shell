@@ -7,7 +7,8 @@ function help_info(){
     echo "--git-url    代码仓库url(required)"
     echo "--git-branch   分支(默认: master)"
     echo "--local-path,--repo_path   代码仓库保存在哪里(默认: 生成一个临时目录在/tmp)"
-    echo "--compile-target-path   编译结果的路径(相对于代码仓库)"
+    echo "--compile-output-path   编译结果的路径(相对于代码仓库)"
+    echo "--ssh-key   登录远程使用的的私钥路径"
     echo "--remote-ip   远程主机ip"
     echo "--remote-user   远程主机的用户名"
     echo "--remote-path   部署的远程主机路径(remote模式使用)"
@@ -27,8 +28,8 @@ local_path=''
 repo_path=''
 deploy_path=''
 compile_output_path=''
-compile_output_path=''
 compile_strategy=''
+ssh_key=''
 remote_ip=''
 remote_user=''
 remote_path=''
@@ -48,6 +49,7 @@ repo-path:,
 compile-strategy:,
 compile-target-path:,
 compile-output-path:,
+ssh-key:,
 remote-ip:,
 remote-user:,
 remote-path:,
@@ -88,6 +90,9 @@ do
             shift;;
         --compile-output-path)
             compile_output_path="$2"
+            shift;;
+        --ssh-key)
+            ssh_key="$2"
             shift;;
         --remote-ip)
             remote_ip="$2"
@@ -132,6 +137,8 @@ if [ -z $app_name ] ; then
     fi
     app_name=$(sed -n '1s/.*\/\([^\/\.]*\)\(.git\)*$/\1/1p' <<< $git_url)  # (sed这让人吐血的水货正则)
 fi
+
+
 
 # 得到运行时根路径
 base_path=`dirname $(readlink "$0")`

@@ -11,7 +11,12 @@ function deploy(){
     fi
 
     # 检查远程是否已经存在该文件
-    if ssh "$remote_user@$remote_ip" "ls $remote_path" &> /dev/null;then
+    # !允许手动指定证书
+    if [ -z $ssh_key ] ;then
+        echo "[WARN] does not specified ssh_key, use default ~/.ssh/id_rsa"
+        ssh_key="~/.ssh/id_rsa"
+    fi
+    if ssh -i $ssh_key -o ConnectTimeout=5 "$remote_user@$remote_ip" "ls $remote_path" &> /dev/null;then
         # no ask
         if ! $yes ;then
             read -p "远程主机上已经存在\"$remote_path\",是否删除?(y/n)" del
