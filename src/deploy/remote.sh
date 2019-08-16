@@ -29,7 +29,9 @@ function deploy(){
         if ! ssh "$remote_user@$remote_ip" "rm -rf $remote_path";then
             echo "[ERROR] delete failed"
         fi
-        
+    else    
+        echo "[ERROR] ssh login failed, make sure your ssh-key is vaild"
+        return 1
     fi
     local from="$repo_path/$compile_output_path/."
     local to="$remote_user@$remote_ip:$remote_path"
