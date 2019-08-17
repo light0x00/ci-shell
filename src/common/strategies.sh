@@ -29,6 +29,7 @@ function load_deploy_strategy(){
 }
 
 function load_backup_strategy(){
+    echo '$mode'
     case "$mode" in
     local)
         source "$base_path/backup/local.sh" 

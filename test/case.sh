@@ -1,7 +1,15 @@
 #!/bin/bash
+
+base_path=`dirname $(readlink "$0") &> /dev/null`
+if [ -z $base_path ] ;then
+    base_path=`dirname $0`
+fi
+
+src_base_path=`cd $base_path;cd ../src/ ; pwd`
+
 # ===============================测试代码更新
 function pull_case(){
-    ./deploy/src/index.sh \
+    $src_base_path/index.sh \
     --mode=local \
     --git-url=https://github.com/light0x00/blog.git \
     --skip-compile \
@@ -13,7 +21,7 @@ function pull_case(){
 # ===============================测试编译
 # 测试内置编译脚本
 function compile_case0(){
-    ./deploy/src/index.sh \
+    $src_base_path/index.sh \
     --repo-path=/tmp/blog.7N6KS8 \
     --skip-pull \
     --skip-deploy \
@@ -24,7 +32,7 @@ function compile_case0(){
 # compile_case0
 # 测试使用外部编译脚本
 function compile_case1(){
-    ./deploy/src/index.sh \
+    $src_base_path/index.sh \
     --skip-pull \
     --skip-deploy \
     --mode=remote \
@@ -38,7 +46,7 @@ function compile_case1(){
 
 # 部署到远程
 function deploy_case0(){
-    ./deploy/src/index.sh \
+    $src_base_path/index.sh \
     --app-name=blog\
     --skip-pull \
     --skip-compile \
@@ -54,22 +62,22 @@ function deploy_case0(){
 
 # 部署到本地
 function deploy_case1(){
-    ./deploy/src/index.sh \
+    $src_base_path/index.sh \
     --app-name=blog\
     --skip-pull \
     --skip-compile \
     --mode=local \
     --local-path=/tmp/blog.7N6KS8 \
     --deploy-path=/Users/light/Desktop/tmp/blog \
-    --compile-target-path=dist
+    --compile-output-path=dist 
     # -y
 }
-# deploy_case1
+deploy_case1
 
 # ===============================测试备份
 
 function backup_case0(){
-    ./deploy/src/index.sh \
+    $src_base_path/index.sh \
     --app-name=blog\
     --skip-pull \
     --skip-compile \
@@ -82,5 +90,5 @@ function backup_case0(){
     --backup-dir=/home/light/app-backup
     # -y
 }
-backup_case0
+# backup_case0
 

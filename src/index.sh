@@ -4,15 +4,16 @@
 function help_info(){
     echo "-m,--mode    部署到本地或远程主机"
     echo "--compile-strategy   编译策略,可以指定自定义编译脚本的路径,该脚本需要定义一个名为\"compile\"的function"
-    echo "--git-url    代码仓库url(required)"
+    echo "--git-url    代码仓库url"
     echo "--git-branch   分支(默认: master)"
     echo "--local-path,--repo_path   代码仓库保存在哪里(默认: 生成一个临时目录在/tmp)"
     echo "--compile-output-path   编译结果的路径(相对于代码仓库)"
-    echo "--ssh-key   登录远程使用的的私钥路径"
+    echo "--ssh-key   登录远程使用的的私钥路径(默认~/.ssh/id_rsa)"
     echo "--remote-ip   远程主机ip"
     echo "--remote-user   远程主机的用户名"
     echo "--remote-path   部署的远程主机路径(remote模式使用)"
     echo "--deploy-path     部署的路径(local模式使用)"
+    echo "--after-deploy    在部署完以后要在远程执行的shell(shell路径或者shell文本)"
     echo "--skip-compile    跳过编译"
     echo "--skip-pull   不更新本地代码仓库"
     echo "--skip-deploy   不部署(凑数的)"
@@ -36,9 +37,11 @@ remote_path=''
 skip_compile=false
 skip_pull=false
 skip_deploy=false
+after_deploy=''
 backup_dir=''
 yes=false
 
+# -u
 set -- $(getopt -u -o yh --long '
 mode:,
 app-name:,
@@ -57,9 +60,12 @@ deploy-path:,
 skip-pull,
 skip-compile,
 skip-deploy,
+after-deploy:,
 backup-dir:,
 yes,
-help' -n "集成部署工具" -- $@)
+help' -n "部署工具" -- $@)
+
+echo "$@"
 
 while [ -n "$1" ]
 do
@@ -113,6 +119,8 @@ do
             skip_compile=true;;
         --skip-deploy)
             skip_deploy=true;;
+        --after-deploy)
+            after_deploy="$2";;
         -y|--yes)
             yes=true;;
         -h|--help)
@@ -138,9 +146,6 @@ if [ -z $app_name ] ; then
     app_name=$(sed -n '1s/.*\/\([^\/\.]*\)\(.git\)*$/\1/1p' <<< $git_url)  # (sed这让人吐血的水货正则)
 fi
 
-
-
-# 得到运行时根路径
 base_path=`dirname $(readlink "$0") &> /dev/null`
 if [ -z $base_path ] ;then
     base_path=`dirname $0`
@@ -149,11 +154,11 @@ fi
 set -o errexit
 
 # ============================================================
-
+source "$base_path/common/toolkit.sh"
 source  "$base_path/common/strategies.sh"
+
 # 1. pull
 if ! $skip_pull ; then
-    source "$base_path/common/pull.sh"
     pull
 fi
 
@@ -165,8 +170,12 @@ fi
 
 # 3. deploy
 if ! $skip_deploy ; then
+    # 加载部署策略 进行部署 
     load_deploy_strategy
     deploy
+    
+    # after deploy
+    exec_script $after_deploy
 fi
 
 # 4. backup
@@ -174,3 +183,4 @@ if [ -n "$backup_dir" ] ; then
     load_backup_strategy
     backup
 fi
+
