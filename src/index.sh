@@ -190,3 +190,4 @@ if [ -n "$backup_dir" ] ; then
     backup
 fi
 
+echo "[INFO] success!"
