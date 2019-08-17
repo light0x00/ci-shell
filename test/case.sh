@@ -1,5 +1,7 @@
 #!/bin/bash
 
+repo_path=/Users/light/Desktop/my-workbench/blog
+
 base_path=`dirname $(readlink "$0") &> /dev/null`
 if [ -z $base_path ] ;then
     base_path=`dirname $0`
@@ -51,13 +53,13 @@ function deploy_case0(){
     --skip-pull \
     --skip-compile \
     --mode=remote \
-    --local-path=/tmp/blog.7N6KS8 \
+    --local-path=$repo_path \
     --compile-target-path=dist \
     --remote-ip=47.244.152.125 \
     --remote-user=light \
-    --skip-deploy \
     --remote-path=/home/light/app/blog \
-    <<< 'service nginx reload'
+    --ssh-key=/Users/light/.ssh/id_rsa_light \
+    <<< '/usr/sbin/service nginx reload'
     # -y
 }
 deploy_case0
@@ -69,7 +71,7 @@ function deploy_case1(){
     --skip-pull \
     --skip-compile \
     --mode=local \
-    --local-path=/Users/light/Desktop/my-workbench/blog \
+    --local-path=$repo_path \
     --compile-output-path=dist \
     --deploy-path=/Users/light/Desktop/tmp/blog \
     -y \

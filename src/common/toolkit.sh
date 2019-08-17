@@ -2,7 +2,7 @@ function prepare_ssh(){
     # !允许手动指定证书
     if [ -z $ssh_key ] ;then
         echo "[WARN] No ssh_key specified, use default ~/.ssh/id_rsa"
-        ssh_key="~/.ssh/id_rsa"
+        ssh_key="$HOME/.ssh/id_rsa"
     fi
     if ! [ -r $ssh_key ] ; then
         echo "[ERROR] make sure the ssh_key($ssh_key) exists,and you have permission"
@@ -16,7 +16,7 @@ function prepare_ssh(){
 
 function exec_script(){
     local script=$1
-    
+    echo "!!!"
     if [ -r "$script" ] ;then
         script=`cat $script`
     fi

@@ -14,20 +14,21 @@ function deploy(){
     fi
 
     # 检查远程是否已经存在该文件
-   
+    
     if ssh -o ConnectTimeout=5 "$remote_user@$remote_ip" "ls $remote_path" &> /dev/null;then
         # no ask
         if ! $yes ;then
-            read -p "远程主机上已经存在\"$remote_path\",是否删除?(y/n)" del
+            read < /dev/tty -p "远程主机上已经存在\"$remote_path\",是否删除?(y/n)" del 
             if ! [[ "$del" =~ [yY] ]] ; then
                 echo "[WARN] Deploy broken!" 
                 return 1
             fi
         fi
         # delete existing files of the same name
-        if ! ssh "$remote_user@$remote_ip" "rm -rf $remote_path";then
+        if ! ssh  -o ConnectTimeout=5 "$remote_user@$remote_ip" "rm -rf $remote_path";then
             echo "[ERROR] delete failed"
         fi
+        
     else    
         echo "[ERROR] ssh login failed, make sure your ssh-key is vaild"
         return 1

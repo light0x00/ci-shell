@@ -41,7 +41,6 @@ after_deploy=''
 backup_dir=''
 yes=false
 
-# -u
 set -- $(getopt -u -o yh --long '
 mode:,
 app-name:,
@@ -64,25 +63,6 @@ after-deploy:,
 backup-dir:,
 yes,
 help' -n "部署工具" -- "$@")
-
-# echo "$2"
-# read input < /dev/tty
-# echo $input
-# while read -t 1 line
-# do
-#     echo $line
-# done
-
-
-
-
-# for arg in "$@"
-# do
-#     echo $arg
-# done
-
-# echo $2
-
 
 while [ -n "$1" ]
 do
@@ -181,12 +161,16 @@ source  "$base_path/common/strategies.sh"
 # 1. pull
 if ! $skip_pull ; then
     pull
+else
+    echo "[INFO] skip pull"
 fi
 
 # 2. compile
 if ! $skip_compile ; then
     load_compile_strategy
     compile
+else
+    echo "[INFO] skip compile"
 fi
 
 # 3. deploy
@@ -194,9 +178,10 @@ if ! $skip_deploy ; then
     # 加载部署策略 进行部署 
     load_deploy_strategy
     deploy
-    
     # after deploy
     exec_script "$after_deploy"
+else
+    echo "[INFO] skip deploy"
 fi
 
 # 4. backup
