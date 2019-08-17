@@ -142,11 +142,13 @@ if [ -z $app_name ] ; then
     fi
     app_name=$(sed -n '1s/.*\/\([^\/\.]*\)\(.git\)*$/\1/1p' <<< $git_url)  # (sed这让人吐血的水货正则)
 fi
+
 # 确定基路径
-base_path=`dirname $(readlink "$0") &> /dev/null`
+base_path=`dirname $(readlink $0)` &> /dev/null
 if [ -z $base_path ] ;then
     base_path=`dirname $0`
 fi
+
 # 从STDIN获取 (部署后)要执行的脚本 
 if [ -z $after_deploy ] ; then
     read -t 1 after_deploy
