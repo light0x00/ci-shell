@@ -55,24 +55,27 @@ function deploy_case0(){
     --compile-target-path=dist \
     --remote-ip=47.244.152.125 \
     --remote-user=light \
-    --remote-path=/home/light/app/blog
+    --skip-deploy \
+    --remote-path=/home/light/app/blog \
+    <<< 'service nginx reload'
     # -y
 }
-# deploy_case0
+deploy_case0
 
 # 部署到本地
 function deploy_case1(){
     $src_base_path/index.sh \
-    --app-name=blog\
+    --app-name=blog \
     --skip-pull \
     --skip-compile \
     --mode=local \
-    --local-path=/tmp/blog.7N6KS8 \
+    --local-path=/Users/light/Desktop/my-workbench/blog \
+    --compile-output-path=dist \
     --deploy-path=/Users/light/Desktop/tmp/blog \
-    --compile-output-path=dist 
-    # -y
+    -y \
+   <<< 'echo $USER'
 }
-deploy_case1
+# deploy_case1
 
 # ===============================测试备份
 

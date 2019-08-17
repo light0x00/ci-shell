@@ -15,7 +15,6 @@ function prepare_ssh(){
 
 
 function exec_script(){
-    
     local script=$1
     
     if [ -r "$script" ] ;then
@@ -24,14 +23,17 @@ function exec_script(){
 
     if [ -n "$script" ] ;then
         case "$mode" in
-        --local)
+        local)
             echo "[INFO] exec local script"
             eval $script
             shift;;
-        --remote)
+        remote)
             echo "[INFO] exec remote script"
             ssh -o ConnectTimeout=5 "$remote_user@$remote_ip" "$script"
             shift;;
+        *)
+            echo "[ERROR] unknown mode: $mode" 
+            return 1;
         esac
     fi
 

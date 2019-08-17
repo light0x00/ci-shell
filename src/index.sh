@@ -63,9 +63,26 @@ skip-deploy,
 after-deploy:,
 backup-dir:,
 yes,
-help' -n "部署工具" -- $@)
+help' -n "部署工具" -- "$@")
 
-echo "$@"
+# echo "$2"
+# read input < /dev/tty
+# echo $input
+# while read -t 1 line
+# do
+#     echo $line
+# done
+
+
+
+
+# for arg in "$@"
+# do
+#     echo $arg
+# done
+
+# echo $2
+
 
 while [ -n "$1" ]
 do
@@ -119,7 +136,7 @@ do
             skip_compile=true;;
         --skip-deploy)
             skip_deploy=true;;
-        --after-deploy)
+        -s|--after-deploy)
             after_deploy="$2";;
         -y|--yes)
             yes=true;;
@@ -136,8 +153,8 @@ do
 done
 
 
-
 # ============================================================ 
+# 确定app_name
 if [ -z $app_name ] ; then
     if [ -z $git_url ] ; then
         echo "[ERROR] should specify at least one of git_url or app_name!"
@@ -145,10 +162,14 @@ if [ -z $app_name ] ; then
     fi
     app_name=$(sed -n '1s/.*\/\([^\/\.]*\)\(.git\)*$/\1/1p' <<< $git_url)  # (sed这让人吐血的水货正则)
 fi
-
+# 确定基路径
 base_path=`dirname $(readlink "$0") &> /dev/null`
 if [ -z $base_path ] ;then
     base_path=`dirname $0`
+fi
+# 从STDIN获取 (部署后)要执行的脚本 
+if [ -z $after_deploy ] ; then
+    read -t 1 after_deploy
 fi
 
 set -o errexit
@@ -167,7 +188,9 @@ if ! $skip_compile ; then
     load_compile_strategy
     compile
 fi
-
+ # after deploy
+exec_script "$after_deploy"
+exit;
 # 3. deploy
 if ! $skip_deploy ; then
     # 加载部署策略 进行部署 
@@ -175,7 +198,7 @@ if ! $skip_deploy ; then
     deploy
     
     # after deploy
-    exec_script $after_deploy
+    exec_script "$after_deploy"
 fi
 
 # 4. backup
