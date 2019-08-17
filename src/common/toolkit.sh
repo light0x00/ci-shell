@@ -9,14 +9,13 @@ function prepare_ssh(){
         return 1;
     fi
     eval `ssh-agent`
-    chmod u=r,og-rwx $ssh_key
+    # chmod u=r,og-rwx $ssh_key
     ssh-add $ssh_key
 }
 
 
 function exec_script(){
     local script=$1
-    echo "!!!"
     if [ -r "$script" ] ;then
         script=`cat $script`
     fi
