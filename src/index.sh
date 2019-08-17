@@ -188,9 +188,7 @@ if ! $skip_compile ; then
     load_compile_strategy
     compile
 fi
- # after deploy
-exec_script "$after_deploy"
-exit;
+
 # 3. deploy
 if ! $skip_deploy ; then
     # 加载部署策略 进行部署 
