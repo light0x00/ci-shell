@@ -179,6 +179,7 @@ fi
 if ! $skip_deploy ; then
     # 加载部署策略 进行部署 
     load_deploy_strategy
+    echo "[INFO] SB travis"
     deploy
     # after deploy
     exec_script "$after_deploy"
