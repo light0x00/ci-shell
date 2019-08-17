@@ -41,6 +41,7 @@ ln -s [path]/src/index.sh /usr/local/bin/ci-shell
     --remote-ip=[目标服务器ip] 
     --remote-user=[登录服务器用户] 
     --remote-path=[部署在服务器的路径]
+    <<< '[]' # 部署后执行的脚本
 ```
 
 部署到本地
