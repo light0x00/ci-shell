@@ -10,7 +10,7 @@ function open_ssh_agent(){
         echo "[ERROR] make sure the ssh_key($ssh_key) exists,and you have permission"
         return 1;
     fi
-    eval `ssh-agent -s`
+    eval `ssh-agent`
     ssh-add $ssh_key
 }
 
