@@ -15,7 +15,7 @@ function deploy(){
     fi
 
     # 测试是否可以连接
-    if ! ssh -o ConnectTimeout=10 "$remote_user@$remote_ip" ;then
+    if ! ssh -o ConnectTimeout=10 "$remote_user@$remote_ip" 'ls &> /dev/null';then
          echo "[ERROR] ssh login failed, make sure your ssh-key is vaild"
         return 1
     fi
