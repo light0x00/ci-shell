@@ -13,16 +13,16 @@ function deploy(){
 
         return 1;
     fi
-    echo $SSH_AGENT_PID,$SSH_AUTH_SOCK
-    echo "$remote_user@$remote_ip" 
-    # open_ssh_agent #! for test
-    ssh light@47.244.152.125 'echo `date` >> test.txt' # !for test
-    ssh $remote_user@$remote_ip 'ls' # !for test
-    ssh -o ConnectTimeout=10 $remote_user@$remote_ip "ls $remote_path"
+
+    # 测试是否可以连接
+    if ! ssh -o ConnectTimeout=10 "$remote_user@$remote_ip" ;then
+         echo "[ERROR] ssh login failed, make sure your ssh-key is vaild"
+        return 1
+    fi
+
     # 检查远程是否已经存在该文件
-    # ssh -o ConnectTimeout=10 "$remote_user@$remote_ip" "ls $remote_path &> /dev/null"
-    if ssh -o ConnectTimeout=10 $remote_user@$remote_ip "ls $remote_path &> /dev/null" ;then
-        # no ask
+    if ssh "$remote_user@$remote_ip" "if [ -e $remote_path ] " ;then
+            # no ask
         if ! $yes ;then
             echo -n "远程主机上已经存在\"$remote_path\",是否删除?(y/n)"
             read del < /dev/tty
@@ -31,16 +31,14 @@ function deploy(){
                 return 1
             fi
         fi
+
         # delete existing files of the same name
-        if ! ssh  -o ConnectTimeout=5 "$remote_user@$remote_ip" "rm -rf $remote_path";then
+        if ! ssh "$remote_user@$remote_ip" "rm -rf $remote_path";then
             echo "[ERROR] delete failed"
             return 1
         fi
-        
-    else    
-        echo "[ERROR] ssh login failed, make sure your ssh-key is vaild"
-        return 1
     fi
+        
     local from="$repo_path/$compile_output_path/."
     local to="$remote_user@$remote_ip:$remote_path"
     echo "[INFO] from \"$from\" to \"$to\""
