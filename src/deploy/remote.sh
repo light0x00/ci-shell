@@ -21,7 +21,7 @@ function deploy(){
     fi
 
     # 检查远程是否已经存在该文件
-    if ssh "$remote_user@$remote_ip" "if [ -e $remote_path ] " ;then
+    if ssh "$remote_user@$remote_ip" "if [ -e $remote_path ] ;then exit 0 ;else exit 1; fi; " ;then
             # no ask
         if ! $yes ;then
             echo -n "远程主机上已经存在\"$remote_path\",是否删除?(y/n)"
