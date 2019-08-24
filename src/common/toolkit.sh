@@ -1,4 +1,6 @@
-function prepare_ssh(){
+
+function open_ssh_agent(){
+    echo "[INFO] open ssh-agent"
     # !允许手动指定证书
     if [ -z $ssh_key ] ;then
         echo "[WARN] No ssh_key specified, use default ~/.ssh/id_rsa"
@@ -8,10 +10,16 @@ function prepare_ssh(){
         echo "[ERROR] make sure the ssh_key($ssh_key) exists,and you have permission"
         return 1;
     fi
-    eval `ssh-agent`
+    agent_pid=$(awk '{print $3}' <<< $(eval `ssh-agent`))
     # chmod u=r,og-rwx $ssh_key
     ssh-add $ssh_key
 }
+
+function close_ssh_agent(){
+    echo "[INFO] close ssh-agent"
+    kill $agent_pid
+}
+
 
 
 function exec_script(){

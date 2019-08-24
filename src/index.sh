@@ -13,7 +13,7 @@ function help_info(){
     echo "--remote-user   远程主机的用户名"
     echo "--remote-path   部署的远程主机路径(remote模式使用)"
     echo "--deploy-path     部署的路径(local模式使用)"
-    echo "--after-deploy    在部署完以后要在远程执行的shell(shell路径或者shell文本)"
+    echo "--after-deploy    在部署完以后要在远程执行的shell(shell路径)"
     echo "--skip-compile    跳过编译"
     echo "--skip-pull   不更新本地代码仓库"
     echo "--skip-deploy   不部署(凑数的)"
@@ -63,6 +63,8 @@ after-deploy:,
 backup-dir:,
 yes,
 help' -n "部署工具" -- "$@")
+
+echo $*
 
 while [ -n "$1" ]
 do
@@ -116,8 +118,9 @@ do
             skip_compile=true;;
         --skip-deploy)
             skip_deploy=true;;
-        -s|--after-deploy)
-            after_deploy="$2";;
+        --after-deploy)
+            after_deploy="$2"
+            shift;;
         -y|--yes)
             yes=true;;
         -h|--help)
@@ -151,11 +154,14 @@ fi
 
 # 从STDIN获取 (部署后)要执行的脚本 
 if [ -z $after_deploy ] ; then
+    # if !$yes ; then
+    #     read -p "由于bash的限制,读取STDIN后,read将无法正常使用,请考虑添加-y参数"
+    # fi
     read -t 1 after_deploy
 fi
 
-set -o errexit
-
+# set -o errexit
+# read -p "远程主机上已经存在\"$remote_path\",是否删除?(y/n)" del 
 # ============================================================
 source "$base_path/common/toolkit.sh"
 source  "$base_path/common/strategies.sh"
@@ -175,13 +181,18 @@ else
     echo "[INFO] skip compile"
 fi
 
+open_ssh_agent
+
 # 3. deploy
 if ! $skip_deploy ; then
     # 加载部署策略 进行部署 
     load_deploy_strategy
     deploy
     # after deploy
-    exec_script "$after_deploy"
+    if [ $? == 0 ] ; then
+        exec_script "$after_deploy"
+    fi
+    
 else
     echo "[INFO] skip deploy"
 fi
@@ -192,4 +203,4 @@ if [ -n "$backup_dir" ] ; then
     backup
 fi
 
-echo "[INFO] success!"
+close_ssh_agent

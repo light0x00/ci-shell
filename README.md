@@ -1,3 +1,17 @@
+重构策略
+
+部署阶段划分:
+
+pull
+compile
+emit
+run
+backup
+
+解决脚本参数问题
+
+---
+
 ➡️[english](README.en.md)
 
 一个自动化部署工具,基本上你只需要指定几个路径(如:源码路径、部署路径)即可实现部署的自动化, 可以搭配ci工具,如jekins、travis等一起使用.

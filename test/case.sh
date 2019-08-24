@@ -62,7 +62,7 @@ function deploy_case0(){
     <<< '/usr/sbin/service nginx reload'
     # -y
 }
-deploy_case0
+# deploy_case0
 
 # 部署到本地
 function deploy_case1(){
@@ -97,3 +97,40 @@ function backup_case0(){
 }
 # backup_case0
 
+
+# ===============================测试远程执行脚本
+
+function run_case0(){
+    $src_base_path/index.sh \
+    --mode=remote \
+    --app-name=blog\
+    --skip-pull \
+    --skip-compile \
+    --local-path=$repo_path \
+    --compile-output-path=dist \
+    --mode=remote \
+    --remote-ip=47.244.152.125 \
+    --remote-user=light \
+    --remote-path=/home/light/app/blog \
+    --ssh-key=/Users/light/.ssh/id_rsa_light \
+    --after-deploy=/Users/light/Desktop/my-workbench/shells/ci-shell/test/test.sh 
+}
+
+function run_case1(){
+    $src_base_path/index.sh \
+    --mode=remote \
+    --app-name=blog\
+    --skip-pull \
+    --skip-compile \
+    --local-path=$repo_path \
+    --compile-output-path=dist \
+    --mode=remote \
+    --remote-ip=47.244.152.125 \
+    --remote-user=light \
+    --remote-path=/home/light/app/blog \
+    --ssh-key=/Users/light/.ssh/id_rsa_light \
+    <<< "echo 'Bonjour'" \
+    -n
+}
+
+run_case1
