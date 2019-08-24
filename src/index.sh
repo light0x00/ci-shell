@@ -147,7 +147,7 @@ if [ -z $app_name ] ; then
 fi
 
 # 确定基路径
-base_path=`dirname $(readlink $0)` &> /dev/null
+base_path=`dirname $(readlink $0) 2> /dev/null`  
 if [ -z $base_path ] ;then
     base_path=`dirname $0`
 fi
