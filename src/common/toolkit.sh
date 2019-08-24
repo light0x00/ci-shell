@@ -11,7 +11,7 @@ function open_ssh_agent(){
         return 1;
     fi
     local agent_output=$(eval `ssh-agent`)
-    agent_pid=$(awk '{print $3}' <<< agent_output)
+    agent_pid=$(awk '{print $3}' <<< $agent_output)
     echo $agent_output,$agent_pid
     # chmod u=r,og-rwx $ssh_key
     ssh-add $ssh_key
