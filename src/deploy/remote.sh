@@ -14,6 +14,7 @@ function deploy(){
         return 1;
     fi
     echo $SSH_AGENT_PID,$SSH_AUTH_SOCK
+    echo "$remote_user@$remote_ip" 
     # 检查远程是否已经存在该文件
     if ssh -o ConnectTimeout=10 "$remote_user@$remote_ip" "ls $remote_path &> /dev/null" ;then
         # no ask
