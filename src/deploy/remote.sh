@@ -18,9 +18,10 @@ function deploy(){
     # open_ssh_agent #! for test
     ssh light@47.244.152.125 'echo `date` >> test.txt' # !for test
     ssh $remote_user@$remote_ip 'ls' # !for test
+    ssh -o ConnectTimeout=10 $remote_user@$remote_ip "ls $remote_path"
     # 检查远程是否已经存在该文件
     # ssh -o ConnectTimeout=10 "$remote_user@$remote_ip" "ls $remote_path &> /dev/null"
-    if ssh -o ConnectTimeout=10 "$remote_user@$remote_ip" "ls $remote_path &> /dev/null" ;then
+    if ssh -o ConnectTimeout=10 $remote_user@$remote_ip "ls $remote_path &> /dev/null" ;then
         # no ask
         if ! $yes ;then
             echo -n "远程主机上已经存在\"$remote_path\",是否删除?(y/n)"
