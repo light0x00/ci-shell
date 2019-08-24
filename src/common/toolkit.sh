@@ -10,10 +10,10 @@ function open_ssh_agent(){
         echo "[ERROR] make sure the ssh_key($ssh_key) exists,and you have permission"
         return 1;
     fi
-    agent_pid=$(awk '{print $3}' <<< $(eval `ssh-agent`))
-    chmod u=r,og-rwx $ssh_key
-    echo $ssh_key
-    cat $ssh_key
+    local agent_output=$(eval `ssh-agent`)
+    agent_pid=$(awk '{print $3}' <<< agent_output)
+    echo $agent_output,$agent_pid
+    # chmod u=r,og-rwx $ssh_key
     ssh-add $ssh_key
 }
 
