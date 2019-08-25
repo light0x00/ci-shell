@@ -41,7 +41,7 @@ function deploy_case1(){
 # deploy_case1
 
 
-function deploy_case0(){
+function deploy_case2(){
 
     # compile_output_path='/Users/light/Desktop/my-workbench/java/projects/blog-api/blog-core/target/blog-core-0.0.1-SNAPSHOT.jar'
     compile_output_path='/Users/light/Desktop/FarBox_files'
@@ -60,4 +60,4 @@ function deploy_case0(){
     # -y
 }
 
-deploy_case0
+deploy_case2

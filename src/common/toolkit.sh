@@ -19,8 +19,6 @@ function close_ssh_agent(){
     kill $SSH_AGENT_PID
 }
 
-
-
 function exec_script(){
     local script=$1
     if [ -r "$script" ] ;then
@@ -45,6 +43,21 @@ function exec_script(){
 
 }
 
+# 在远程执行shell
+function rpc(){
+    if [ -z $0 ] ; then
+        echo "[WARN] 要执行的脚本为空!"
+    fi
+    ssh $remote_user@$remote_ip "$0"
+}
+
+function random_file_path(){
+    `mktemp /tmp/$app_name.XXXXXX`
+}
+
+function random_dir_path(){
+    `mktemp -d /tmp/$app_name.XXXXXX`
+}
 
 # 拉取代码
 function pull(){

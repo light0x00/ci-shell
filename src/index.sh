@@ -13,7 +13,7 @@ function help_info(){
     echo "--remote-user   远程主机的用户名"
     echo "--remote-path   部署的远程主机路径(remote模式使用)"
     echo "--deploy-path     部署的路径(local模式使用)"
-    echo "--after-deploy    在部署完以后要在远程执行的shell(shell路径)"
+    echo "--after-deploy    在部署完以后要在远程或本地(取决于mode值)执行的shell路径"
     echo "--skip-compile    跳过编译"
     echo "--skip-pull   不更新本地代码仓库"
     echo "--skip-deploy   不部署(凑数的)"
@@ -91,10 +91,10 @@ do
         --compile-target-path)
             echo "[WARN] compile-target-path is deprecated"
             compile_output_path="$2"
-            compile_output_path="$2"
             shift;;
         --compile-output-path)
             compile_output_path="$2"
+            echo $compile_output_path
             shift;;
         --ssh-key)
             ssh_key="$2"
@@ -152,9 +152,13 @@ if [ -z $base_path ] ;then
     base_path=`dirname $0`
 fi
 
-# 从STDIN获取 (部署后)要执行的脚本 
+# 从STDIN获取 after_deploy_script
 if [ -z $after_deploy ] ; then
-    read -t 1 after_deploy
+    read -t 1 after_deploy_script
+    if [ -n "$after_deploy_script" ] ; then
+        after_deploy=`mktemp /tmp/$app_name.XXXXXX`
+        echo "$after_deploy_script" > $after_deploy
+    fi
 fi
 
 if [ -z $compile_output_path ]; then
@@ -183,6 +187,12 @@ else
     echo "[INFO] skip compile"
 fi
 
+ #for test
+# echo `$after_deploy`   
+# source $after_deploy
+# `run`
+# exit 0
+
 open_ssh_agent
 
 # 3. deploy
@@ -191,8 +201,11 @@ if ! $skip_deploy ; then
     load_deploy_strategy
     deploy
     # after deploy
+    echo $after_deploy
     if [ $? == 0 ] ; then
-        exec_script "$after_deploy"
+        if [ -n $after_deploy ]; then
+            exec_script "`source $after_deploy`"
+        fi
     fi
     
 else
