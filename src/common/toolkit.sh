@@ -26,6 +26,9 @@ function exec_script(){
     fi
 
     if [ -n "$script" ] ;then
+        echo "即将在执行的脚本:"
+        echo "$script"
+
         case "$mode" in
         local)
             echo "[INFO] exec local script"

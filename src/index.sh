@@ -187,12 +187,6 @@ else
     echo "[INFO] skip compile"
 fi
 
- #for test
-# echo `$after_deploy`   
-# source $after_deploy
-# `run`
-# exit 0
-
 open_ssh_agent
 
 # 3. deploy
