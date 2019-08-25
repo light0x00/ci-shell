@@ -1,14 +1,15 @@
 重构策略
 
-部署阶段划分:
+- 命名标准化
+- 部署阶段划分:
 
-pull
-compile
-emit
-run
-backup
-
-解决脚本参数问题
+    pull
+    compile
+    emit
+    run
+    backup
+- 解决参数解析问题
+- ssh抽为公共方法
 
 ---
 
@@ -37,6 +38,9 @@ ln -s [path]/src/index.sh /usr/local/bin/ci-shell
 ---
 
 # 使用
+
+[前端](https://github.com/light0x00/blog-ui)
+[后端](https://github.com/light0x00/blog-api)
 
 ## 命令格式
 

@@ -154,12 +154,14 @@ fi
 
 # 从STDIN获取 (部署后)要执行的脚本 
 if [ -z $after_deploy ] ; then
-    # if !$yes ; then
-    #     read -p "由于bash的限制,读取STDIN后,read将无法正常使用,请考虑添加-y参数"
-    # fi
     read -t 1 after_deploy
 fi
 
+if [ -z $compile_output_path ]; then
+    if ! [[ $compile_output_path =~ ^/ ]] ;then
+        compile_output_path="$repo_path/$compile_output_path"
+    fi
+fi
 # set -o errexit
 # read -p "远程主机上已经存在\"$remote_path\",是否删除?(y/n)" del 
 # ============================================================

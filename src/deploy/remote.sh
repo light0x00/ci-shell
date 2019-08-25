@@ -4,8 +4,8 @@ function deploy(){
     # 准备ssh登录环境
  
     
-    if  [ ! -r "$repo_path/$compile_output_path" ] ;then
-        echo "[ERROR] make sure the compile target \"$repo_path/$compile_output_path\" exists"
+    if  [ ! -r "$compile_output_path" ] ;then
+        echo "[ERROR] make sure the compile target \"$compile_output_path\" exists"
         return 1
     fi
     if  [ -z $remote_ip ] || [ -z $remote_user ] || [ -z $remote_path ] ;then
@@ -38,9 +38,14 @@ function deploy(){
             return 1
         fi
     fi
-        
-    local from="$repo_path/$compile_output_path/."
-    local to="$remote_user@$remote_ip:$remote_path"
+    local from
+    if [ -d "$compile_output_path" ] ;then
+        from="$compile_output_path/."
+    else
+        from="$compile_output_path"
+    fi
+    local to="$remote_user@$remote_ip:$remote_path/"
+    ssh "$remote_user@$remote_ip" "mkdir $remote_path"
     echo "[INFO] from \"$from\" to \"$to\""
     if scp -r "$from" "$to" ; then
         echo "[INFO] Deploy success"

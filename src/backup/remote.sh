@@ -3,7 +3,7 @@ function backup(){
     echo "[INFO] Start backup"
     
     if [ ! -r "$repo_path" ] || [ ! -r "$compile_output_path" ];then
-        echo "[ERROR] make sure the backup target(\"$repo_path/$compile_output_path/\") exits, and you have have read permission!"
+        echo "[ERROR] make sure the backup target(\"$compile_output_path/\") exits, and you have have read permission!"
         return 1
     fi
     if [ ! -w $backup_dir ] ;then
@@ -16,7 +16,7 @@ function backup(){
         return 1
     fi
 
-    local from="$repo_path/$compile_output_path/"
+    local from="$compile_output_path/"
     local to="$backup_dir/$app_name-`date +%Y%m%d%H%M%S`"
     echo "[INFO] from: $from to: $to"
     if cp -r "$from/" "$to" ;then
