@@ -43,7 +43,6 @@ function exec_script(){
             return 1;
         esac
     fi
-
 }
 
 # 在远程执行shell
