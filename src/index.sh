@@ -195,9 +195,8 @@ if ! $skip_deploy ; then
     load_deploy_strategy
     deploy
     # after deploy
-    echo $after_deploy
     if [ $? == 0 ] ; then
-        if [ -n $after_deploy ]; then
+        if [ -f $after_deploy ]; then
             exec_script "`source $after_deploy`"
         fi
     fi
